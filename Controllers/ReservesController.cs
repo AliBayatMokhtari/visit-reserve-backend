@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Models;
 using TodoApi.Models.Data;
+using TodoApi.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace TodoApi.Controllers
 {
@@ -20,15 +22,19 @@ namespace TodoApi.Controllers
 
         // GET
         [HttpGet]
-        public IEnumerable<Reserve> GetReserves()
+        public async Task<IEnumerable<ReserveDto>> GetReserves()
         {
-            return _context.Reserves.ToList();
+            var reserves = await _context.Reserves
+                .Select(r => new ReserveDto(r))
+                .ToListAsync();
+
+            return reserves;
         }
 
 
         // GET with id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Reserve>> GetReserve(int id)
+        public async Task<ActionResult<ReserveDto>> GetReserve(int id)
         {
             var reserve = await _context.Reserves.FindAsync(id);
 
@@ -37,20 +43,23 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
 
-            return reserve;
+            var reserveDto = new ReserveDto(reserve);
+
+            return reserveDto;
         }
 
 
         // Post 
         [HttpPost]
-        public async Task<ActionResult<Reserve>> PostReserve(Reserve reserve)
+        public async Task<ActionResult<ReserveDto>> PostReserve(Reserve reserve)
         {
             await _context.Reserves.AddAsync(reserve);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetReserve), new {id = reserve.Id},
-                reserve);
+            var reserveDto = new ReserveDto(reserve);
+
+            return CreatedAtAction(nameof(GetReserve), new { id = reserve.Id }, reserveDto);
         }
 
 
@@ -59,7 +68,7 @@ namespace TodoApi.Controllers
 
         // DELETE
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Reserve>> DeleteReserve(int id)
+        public async Task<ActionResult<ReserveDto>> DeleteReserve(int id)
         {
             var reserve = await _context.Reserves.FindAsync(id);
 

@@ -15,8 +15,8 @@ namespace TodoApi.Models.DTOs
             MobileNumber = patient.MobileNumber;
             Age = patient.Age;
         }
-        
-        
+
+
         public int Id { get; set; }
 
         [Required]
@@ -33,7 +33,5 @@ namespace TodoApi.Models.DTOs
 
         [Required]
         public int Age { get; set; }
-
-        public IList<ReserveDto> Reserves { get; set; } = new List<ReserveDto>();
     }
 }

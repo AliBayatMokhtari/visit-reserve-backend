@@ -14,6 +14,6 @@ namespace TodoApi.Models
 
         public IList<Office> Offices { get; set; } = new List<Office>();
 
-        public IList<Patient> Patients { get; set; } = new List<Patient>();
+        public IList<Reserve> Reserves { get; set; } = new List<Reserve>();
     }
 }

@@ -13,7 +13,7 @@ namespace TodoApi.Models.DTOs
             PatientId = reserve.PatientId;
             DoctorId = reserve.DoctorId;
         }
-        
+
         public int Id { get; set; }
 
         [Required]
@@ -24,9 +24,5 @@ namespace TodoApi.Models.DTOs
 
         [Required]
         public int DoctorId { get; set; }
-
-        public PatientDto Patient { get; set; }
-
-        public DoctorDto Doctor { get; set; }
     }
 }

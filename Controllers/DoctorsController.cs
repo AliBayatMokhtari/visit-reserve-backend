@@ -46,7 +46,7 @@ namespace TodoApi.Controllers
         }
 
 
-        [HttpGet("{id}/offices")]
+        [HttpGet("{id}/Offices")]
         public async Task<ActionResult<IEnumerable<OfficeDto>>> GetDoctorOffices(int id)
         {
 
@@ -66,6 +66,27 @@ namespace TodoApi.Controllers
         }
 
 
+        [HttpGet("{id}/Reserves")]
+        public async Task<ActionResult<IEnumerable<ReserveDto>>> GetDoctorReserves(int id)
+        {
+
+            var doctor = await _context.Doctors.FindAsync(id);
+
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            var reserves = await _context.Reserves
+                .Where(r => r.DoctorId == id)
+                .Select(r => new ReserveDto(r))
+                .ToListAsync();
+
+            return reserves;
+
+        }
+
+
         // POST
         [HttpPost]
         public async Task<ActionResult<DoctorDto>> PostDoctor(Doctor doctor)
@@ -73,10 +94,10 @@ namespace TodoApi.Controllers
             await _context.Doctors.AddAsync(doctor);
 
             await _context.SaveChangesAsync();
-            
+
             var doctorDto = new DoctorDto(doctor);
 
-            return CreatedAtAction(nameof(GetDoctor), new {id = doctor.Id}, doctorDto);
+            return CreatedAtAction(nameof(GetDoctor), new { id = doctor.Id }, doctorDto);
         }
 
 
@@ -89,7 +110,7 @@ namespace TodoApi.Controllers
             {
                 return BadRequest();
             }
-            
+
             var d = await _context.Doctors.FindAsync(id);
 
             if (d == null)

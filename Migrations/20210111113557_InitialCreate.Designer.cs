@@ -9,7 +9,7 @@ using TodoApi.Models.Data;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210107184813_InitialCreate")]
+    [Migration("20210111113557_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,9 @@ namespace TodoApi.Migrations
                     b.Property<int>("DoctorId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Floor")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("GeoLatitude")
                         .HasColumnType("TEXT");
 
@@ -62,10 +65,7 @@ namespace TodoApi.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("floor")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("unit")
+                    b.Property<int>("Unit")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -84,9 +84,6 @@ namespace TodoApi.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Family")
                         .HasColumnType("TEXT");
 
@@ -100,8 +97,6 @@ namespace TodoApi.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
 
                     b.ToTable("Patients");
                 });
@@ -141,17 +136,10 @@ namespace TodoApi.Migrations
                     b.Navigation("Doctor");
                 });
 
-            modelBuilder.Entity("TodoApi.Models.Patient", b =>
-                {
-                    b.HasOne("TodoApi.Models.Doctor", null)
-                        .WithMany("Patients")
-                        .HasForeignKey("DoctorId");
-                });
-
             modelBuilder.Entity("TodoApi.Models.Reserve", b =>
                 {
                     b.HasOne("TodoApi.Models.Doctor", "Doctor")
-                        .WithMany()
+                        .WithMany("Reserves")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -171,7 +159,7 @@ namespace TodoApi.Migrations
                 {
                     b.Navigation("Offices");
 
-                    b.Navigation("Patients");
+                    b.Navigation("Reserves");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Patient", b =>
